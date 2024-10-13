@@ -12,7 +12,7 @@ i=0
 while [[ $(docker inspect -f json web-server-test |jq -r .[0].State.Status) != running ]]; do
 	sleep 1;
 	i=$(expr $i + 1)
-	if [[ $i gte 5  ]]; then
+	if [[ $i ge 5  ]]; then
 	   echo "Timeout!!! Container not running after waiting $is "
 	   exit 1
 	fi

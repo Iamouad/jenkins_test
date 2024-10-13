@@ -8,8 +8,14 @@ docker build /root/jenkins_test -t nginx-custom:$2
 echo ------------- Starting Test container --------------------
 docker run -ti --rm -d -p 8082:80 --name web-server-test nginx-custom:$2
 #Readiness test
+i=0
 while [[ $(docker inspect -f json web-server-test |jq -r .[0].State.Status) != running ]]; do
 	sleep 1;
+	i=$(expr $i + 1)
+	if [[ $i gte 5  ]]; then
+	   echo "Timeout!!! Container not running after waiting $is "
+	   exit 1
+	fi
 done
 #Test container test
 echo ------------- Testing Test container --------------------
@@ -21,8 +27,5 @@ docker rm -f web-server-test
 echo ------------- Upgrading App container --------------------
 docker rm -f web-server
 docker run -ti --rm -d -p 8081:80 --name web-server nginx-custom:$2
-while [[ $(docker inspect -f json web-server |jq -r .[0].State.Status) != running ]]; do
-        sleep 1;
-done
 curl localhost:8081
 exit 0

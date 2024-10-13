@@ -6,6 +6,7 @@ cp $1 /root/jenkins_test/
 docker build /root/jenkins_test -t nginx-custom:$2
 #start test container on port 8082
 echo ------------- Starting Test container --------------------
+docker rm -f web-server-test || echo "Cleanining up test environement"
 docker run -ti --rm -d -p 8082:80 --name web-server-test nginx-custom:$2
 #Readiness test
 i=0

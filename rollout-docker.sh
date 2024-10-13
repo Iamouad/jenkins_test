@@ -4,7 +4,7 @@ set -e
 echo $1 $2
 current_deployed_tag=$(docker ps -f name=web-server --format json | jq -r .Image)
 cp $1 /root/jenkins_test/
-docker build /root/jenkins_test -t nginx-custom:$2
+docker build --no-cache /root/jenkins_test -t nginx-custom:$2
 #start test container on port 8082
 echo ------------- Starting Test container --------------------
 docker rm -f web-server-test || echo "Cleanining up test environement"
